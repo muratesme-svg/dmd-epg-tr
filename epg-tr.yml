@@ -1,0 +1,117 @@
+name: EPG Turkiye Guncelle
+
+# Bu is akisi, acik kaynakli iptv-org/epg projesini (https://github.com/iptv-org/epg)
+# kullanarak Turkce (lang=tr) kanal rehberini gunde bir kez otomatik ceker ve
+# bu deponun icine "dist/guide-tr.xml(.gz)" olarak commit'ler. Ayrica bir
+# "manifest-tr.json" ve "registry.json" uretir - DMD IPTV PRO bu sayede once
+# kucuk manifest dosyasini kontrol edip hash/versiyon degismemisse buyuk
+# guide dosyasini hic indirmeden atlayabilir, ve ileride birden fazla
+# ulke/dil rehberi eklendiginde (guide-de.xml.gz, guide-fr.xml.gz gibi)
+# hepsini tek bir registry.json uzerinden kesfedebilir.
+#
+# Sonuc dosyalara raw.githubusercontent.com uzerinden sabit, ucretsiz,
+# telifsiz bir adresten (Fastly CDN) her zaman erisilebilir.
+
+on:
+  schedule:
+    # Her gun 03:00 UTC (Turkiye saatiyle yaz/kis farkina gore ~06:00-07:00)
+    - cron: '0 3 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  grab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bu depoyu checkout et
+        uses: actions/checkout@v4
+
+      - name: iptv-org/epg kaynak kodunu klonla
+        run: git clone --depth 1 https://github.com/iptv-org/epg.git epg-src
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Bagimliliklari kur
+        working-directory: epg-src
+        run: npm ci
+
+      # Asagidaki site listesi, iptv-org/epg deposundaki TUM site
+      # tarayicilari arasindan "lang=tr" (Turkce) kanal iceren siteler
+      # taranarak cikarildi. Yeni bir ULKE/DIL eklemek istediginizde bu
+      # workflow'u kopyalayip --sites/--lang degerlerini ve dosya adlarini
+      # (guide-tr -> guide-de gibi) degistirmeniz yeterli - pipeline'in
+      # geri kalani (manifest/registry uretimi) ayni kalir.
+      - name: Turkce EPG verisini cek
+        working-directory: epg-src
+        run: >
+          npm run grab --
+          --sites=digiturk.com.tr,dsmart.com.tr,turksatkablo.com.tr,tvplus.com.tr,galamtv.kz,ipko.tv,melita.com,teleboy.ch,tv24.se,tvgids.nl,tvprofil.com,webtv.delta.nl,ziggogo.tv,tv.blue.ch
+          --lang=tr
+          --days=3
+          --maxConnections=10
+          --output=guide.xml
+          --gzip
+
+      - name: Sonucu bu depoya kopyala
+        run: |
+          mkdir -p dist
+          cp epg-src/guide.xml dist/guide-tr.xml
+          cp epg-src/guide.xml.gz dist/guide-tr.xml.gz
+
+      - name: Manifest ve registry uret
+        run: |
+          set -e
+          CHANNELS=$(grep -c '<channel ' dist/guide-tr.xml || echo 0)
+          PROGRAMMES=$(grep -c '<programme ' dist/guide-tr.xml || echo 0)
+          HASH=$(sha256sum dist/guide-tr.xml.gz | awk '{print $1}')
+          GENERATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          SIZE=$(stat -c%s dist/guide-tr.xml.gz)
+
+          cat > dist/manifest-tr.json <<EOF
+          {
+            "country": "tr",
+            "language": "tr",
+            "generated": "$GENERATED",
+            "channels": $CHANNELS,
+            "programmes": $PROGRAMMES,
+            "sha256": "$HASH",
+            "bytesGz": $SIZE,
+            "file": "guide-tr.xml.gz"
+          }
+          EOF
+
+          # DMD, ulke/dil basina kac rehber oldugunu ve nerede oldugunu
+          # buradan kesfeder. Yeni bir ulke eklendiginde bu dosyaya yeni
+          # bir giris eklenir (elle veya baska bir workflow adimiyla) -
+          # simdilik tek girisli, ama format cogul icin hazir.
+          cat > dist/registry.json <<EOF
+          {
+            "version": 1,
+            "updated": "$GENERATED",
+            "guides": {
+              "tr": {
+                "manifest": "manifest-tr.json",
+                "file": "guide-tr.xml.gz"
+              }
+            }
+          }
+          EOF
+
+          echo "Son guncelleme (UTC): $GENERATED" > dist/last-updated.txt
+
+      - name: Degisiklikleri commit'le ve gonder
+        run: |
+          git config user.name "epg-bot"
+          git config user.email "epg-bot@users.noreply.github.com"
+          git add dist/guide-tr.xml dist/guide-tr.xml.gz dist/manifest-tr.json dist/registry.json dist/last-updated.txt
+          if git diff --cached --quiet; then
+            echo "Degisiklik yok, commit atlanuyor."
+          else
+            git commit -m "EPG guncellendi: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
