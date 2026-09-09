@@ -1,10 +1,10 @@
 {
   "country": "tr",
   "language": "tr",
-  "generated": "2026-09-08T03:28:47Z",
+  "generated": "2026-09-09T03:34:51Z",
   "channels": 866,
-  "programmes": 13535,
-  "sha256": "a59e509bbb4d093e2b73841c4a3c64faefb3b1e83fcb1e2b980e750a24526b67",
-  "bytesGz": 486961,
+  "programmes": 12991,
+  "sha256": "f48394eec4336b101d7de6f1aa4eb5de803bfb25d16208048966df05916e5ae1",
+  "bytesGz": 464651,
   "file": "guide-tr.xml.gz"
 }
