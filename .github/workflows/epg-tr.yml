@@ -1,32 +1,131 @@
-name: EPG Turkiye Guncelle
-
-# Bu is akisi, acik kaynakli iptv-org/epg projesini (https://github.com/iptv-org/epg)
-# kullanarak Turkce (lang=tr) kanal rehberini gunde bir kez otomatik ceker ve
-# bu deponun icine "dist/guide-tr.xml(.gz)" olarak commit'ler. Ayrica bir
-# "manifest-tr.json" ve "registry.json" uretir - DMD IPTV PRO bu sayede once
-# kucuk manifest dosyasini kontrol edip hash/versiyon degismemisse buyuk
-# guide dosyasini hic indirmeden atlayabilir, ve ileride birden fazla
-# ulke/dil rehberi eklendiginde (guide-de.xml.gz, guide-fr.xml.gz gibi)
-# hepsini tek bir registry.json uzerinden kesfedebilir.
+# =============================================================================
+#  EPG Turkiye Guncelle (VPN)
+# -----------------------------------------------------------------------------
+#  NEDEN BU DOSYA VAR
+#  Eski is akisi her gun yesil calisiyordu ama yalnizca 122 kanala program
+#  getirebiliyordu. Sebep olculdu (14-15.09.2026): Turk operatorleri yurtdisi
+#  isteklere cevap vermiyor. Ayni cekim Turkiye'den yapilinca 152 kanal geldi.
 #
-# Sonuc dosyalara raw.githubusercontent.com uzerinden sabit, ucretsiz,
-# telifsiz bir adresten (Fastly CDN) her zaman erisilebilir.
+#  KANIT - Digiturk ayni adres, ayni istek:
+#      Istanbul cikisi : HTTP 200
+#      Kiyv cikisi     : HTTP 403
+#  Yani engel ULKEYE gore. Ve bir VPN sunucusu uzerinden gelen Turk IP'si
+#  kabul ediliyor - yani GitHub'in sunucusu Turkiye uzerinden cikarsa is goruyor.
+#
+#  GIRIS MESELESI
+#  AdGuard VPN komut satirinin kullanici-adi/sifre ile girisi YOK; tarayici
+#  onayi istiyor. GitHub sunucusu ise her calismada sifirdan kurulur.
+#  Cozum: oturum BIR KEZ acilir ve GitHub onbelleginde saklanir; gunluk
+#  calismalar onu geri yukler. Her gun calistigi icin onbellek taze kalir.
+#
+#  EMNIYET KEMERI
+#  Cekime baslamadan once Digiturk'e soruyoruz. 403 gelirse VPN Turk cikisi
+#  vermiyor demektir ve is akisi ORADA durur - yarim rehberi iyisinin
+#  uzerine yazmaz. Cekimden sonra da "programi olan kanal" sayisi esigin
+#  altindaysa yine durur.
+# =============================================================================
+
+name: EPG Turkiye Guncelle (VPN)
 
 on:
   schedule:
-    # Her gun 03:00 UTC (Turkiye saatiyle yaz/kis farkina gore ~06:00-07:00)
-    - cron: '0 3 * * *'
-  workflow_dispatch: {}
+    - cron: '0 3 * * *'      # her gun 03:00 UTC (~06:00 TR)
+  workflow_dispatch:
+    inputs:
+      giris_yenile:
+        description: 'AdGuard girisini yenile (ilk kurulumda ve oturum bitince ISARETLE)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
+env:
+  # Bu sayinin ALTINDA kalirsa yayinlamayiz. Olculen degerler:
+  #   VPN'siz GitHub = 122 ,  Turkiye'den = 152
+  # 130 ikisini net ayirir.
+  ASGARI_KANAL: 130
+
 jobs:
   grab:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+
     steps:
       - name: Bu depoyu checkout et
         uses: actions/checkout@v4
+
+      # ---------------------------------------------------------------------
+      # AdGuard oturumu. Onbellekte varsa geri yuklenir; yoksa asagidaki
+      # giris adimi devreye girer.
+      # ---------------------------------------------------------------------
+      - name: AdGuard oturumunu onbellekten al
+        id: oturum
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/adguardvpn-cli
+            ~/.config/adguardvpn-cli
+          key: adguard-oturum-v1
+
+      - name: AdGuard VPN komut satirini kur
+        run: |
+          # -a y : kurulum betigi "/usr/local/bin'e kisayol olusturayim mi?"
+          # diye soruyor ve cevabi /dev/tty'den okumaya calisiyor. GitHub
+          # sunucusunda klavye yok, o yuzden ilk denemede patladi
+          # ("cannot open /dev/tty"). -a y o soruyu pesinen cevaplar.
+          curl -fsSL https://raw.githubusercontent.com/AdguardTeam/AdGuardVPNCLI/HEAD/scripts/release/install.sh \
+            | sh -s -- -v -a y
+          export PATH="$PATH:/opt/adguardvpn_cli"
+          echo "/opt/adguardvpn_cli" >> $GITHUB_PATH
+          adguardvpn-cli --version || /opt/adguardvpn_cli/adguardvpn-cli --version || true
+
+      # ---------------------------------------------------------------------
+      # GIRIS - yalnizca elle baslatildiginda ve kutu isaretliyken.
+      # Bu adim ekrana bir bag basar ve bekler. Actions sayfasindaki CANLI
+      # logda o bagi gorur, tarayicida acar, onaylarsin. Bir kez.
+      # ---------------------------------------------------------------------
+      - name: AdGuard girisi (elle, tek seferlik)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.giris_yenile }}
+        timeout-minutes: 15
+        run: |
+          echo "=============================================================="
+          echo " Asagida cikacak bagi TARAYICIDA ac ve onayla."
+          echo " Onayladiktan sonra bu adim kendiliginden devam eder."
+          echo "=============================================================="
+          adguardvpn-cli login
+
+      - name: Giris yapilmis mi
+        run: |
+          DURUM=$(adguardvpn-cli status 2>&1 || true)
+          echo "$DURUM"
+          if echo "$DURUM" | grep -qi 'not logged\|log in\|oturum'; then
+            echo "::error::AdGuard girisi yok. Bu is akisini ELLE calistirip"
+            echo "::error::'giris_yenile' kutusunu isaretle."
+            exit 1
+          fi
+
+      - name: Istanbul'a baglan
+        run: |
+          adguardvpn-cli connect -l Istanbul || adguardvpn-cli connect -l TR
+          sleep 5
+          adguardvpn-cli status
+
+      # ---------------------------------------------------------------------
+      # KANARYA. Olculmus ayirt edici: Digiturk Turkiye'den 200, disaridan 403.
+      # ---------------------------------------------------------------------
+      - name: Turk cikisi dogrula (Digiturk kanaryasi)
+        run: |
+          KOD=$(curl -s -o /dev/null -w '%{http_code}' -m 20 \
+            -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' \
+            https://www.digiturk.com.tr/ || echo 000)
+          echo "Digiturk yaniti: HTTP=$KOD"
+          if [ "$KOD" != "200" ]; then
+            echo "::error::VPN Turk cikisi vermiyor (Digiturk $KOD). Cekime girilmedi."
+            echo "::error::Rehber DEGISTIRILMEDI - eldeki surum korundu."
+            exit 1
+          fi
+          echo "Turk cikisi dogrulandi."
 
       - name: iptv-org/epg kaynak kodunu klonla
         run: git clone --depth 1 https://github.com/iptv-org/epg.git epg-src
@@ -34,75 +133,109 @@ jobs:
       - name: Node.js kur
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
       - name: Bagimliliklari kur
         working-directory: epg-src
         run: npm ci
 
-      # Asagidaki site listesi, iptv-org/epg deposundaki TUM site
-      # tarayicilari arasindan "lang=tr" (Turkce) kanal iceren siteler
-      # taranarak cikarildi. Yeni bir ULKE/DIL eklemek istediginizde bu
-      # workflow'u kopyalayip --sites/--lang degerlerini ve dosya adlarini
-      # (guide-tr -> guide-de gibi) degistirmeniz yeterli - pipeline'in
-      # geri kalani (manifest/registry uretimi) ayni kalir.
+      # ---------------------------------------------------------------------
+      # TV+ yamasi - yereldeki epg_tvplus_yama.ps1 ile ayni isi yapar.
+      # (1) Dosyada sabit yazili sunucu kapali olabiliyor, ayakta olani bul.
+      # (2) Giris istegi basarisiz olunca .catch undefined donduruyor ve
+      #     sonraki satir "undefined.headers" diye patliyor - gercek sebebi
+      #     gizliyor. Korumali hale getir.
+      # ---------------------------------------------------------------------
+      - name: TV+ site dosyasini yama
+        working-directory: epg-src
+        run: |
+          CONF=sites/tvplus.com.tr/tvplus.com.tr.config.js
+          if [ ! -f "$CONF" ]; then echo "Site dosyasi yok, atlandi."; exit 0; fi
+          SECILEN=""
+          for A in gbzottvsc12 gbzottvsc14 izmaottvsc13 izmaottvsc15 gbzottvsc13 izmaottvsc14; do
+            K=$(curl -s -o /dev/null -w '%{http_code}' -k -m 8 -X POST \
+              -H 'Content-Type: application/json' \
+              -d '{"terminaltype":"webtv","osversion":"Win32","userType":"3","utcEnable":"1","timezone":"Europe/Istanbul"}' \
+              "https://$A.tvplus.com.tr:33207/EPG/JSON/Authenticate" || echo 000)
+            echo "  $A -> HTTP=$K"
+            if [ "$K" != "000" ]; then SECILEN="$A"; break; fi
+          done
+          if [ -n "$SECILEN" ]; then
+            sed -i "s/izmaottvsc14/$SECILEN/g" "$CONF"
+            echo "TV+ sunucusu: $SECILEN"
+          else
+            echo "Ayakta TV+ sunucusu bulunamadi, dosya degistirilmedi."
+          fi
+          sed -i "s|response.headers\['set-cookie'\].join(';')|(response \&\& response.headers \&\& response.headers['set-cookie'] ? response.headers['set-cookie'].join(';') : '')|" "$CONF"
+
+      # ---------------------------------------------------------------------
+      # Cikarilan siteler ve nedenleri (olculdu):
+      #   galamtv.kz    HTTP 404 - adres olmus
+      #   teleboy.ch    HTTP 403
+      #   tvprofil.com  HTTP 403 - Turkiye'den de reddediyor
+      # Bu ucu 14 dakikanin buyuk kismini yiyip tek program getirmiyordu.
+      # ---------------------------------------------------------------------
       - name: Turkce EPG verisini cek
         working-directory: epg-src
         run: >
           npm run grab --
-          --sites=digiturk.com.tr,dsmart.com.tr,turksatkablo.com.tr,tvplus.com.tr,galamtv.kz,ipko.tv,melita.com,teleboy.ch,tv24.se,tvgids.nl,tvprofil.com,webtv.delta.nl,ziggogo.tv,tv.blue.ch
+          --sites=digiturk.com.tr,dsmart.com.tr,turksatkablo.com.tr,tvplus.com.tr,ipko.tv,melita.com,tv24.se,tvgids.nl,webtv.delta.nl,ziggogo.tv,tv.blue.ch
           --lang=tr
           --days=3
-          --maxConnections=10
+          --maxConnections=5
           --output=guide.xml
           --gzip
 
-      - name: Sonucu bu depoya kopyala
+      - name: Sonucu say ve esigi kontrol et
+        id: say
         run: |
           mkdir -p dist
           cp epg-src/guide.xml dist/guide-tr.xml
           cp epg-src/guide.xml.gz dist/guide-tr.xml.gz
+          KANAL=$(grep -o '<channel id=' dist/guide-tr.xml | wc -l)
+          PROGRAM=$(grep -o '<programme ' dist/guide-tr.xml | wc -l)
+          DOLU=$(grep -o '<programme[^>]*channel="[^"]*"' dist/guide-tr.xml \
+                 | sed 's/.*channel="\([^"]*\)".*/\1/' | sort -u | wc -l)
+          echo "kanal tanimi        : $KANAL"
+          echo "toplam program      : $PROGRAM"
+          echo "programi olan kanal : $DOLU"
+          echo "kanal=$KANAL"     >> $GITHUB_OUTPUT
+          echo "program=$PROGRAM" >> $GITHUB_OUTPUT
+          echo "dolu=$DOLU"       >> $GITHUB_OUTPUT
+          if [ "$DOLU" -lt "${{ env.ASGARI_KANAL }}" ]; then
+            echo "::error::Programi olan kanal $DOLU - esik ${{ env.ASGARI_KANAL }}."
+            echo "::error::Yayinlanmadi; eldeki rehber korundu."
+            exit 1
+          fi
 
       - name: Manifest ve registry uret
         run: |
-          set -e
-          CHANNELS=$(grep -c '<channel ' dist/guide-tr.xml || echo 0)
-          PROGRAMMES=$(grep -c '<programme ' dist/guide-tr.xml || echo 0)
           HASH=$(sha256sum dist/guide-tr.xml.gz | awk '{print $1}')
-          GENERATED=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          SIZE=$(stat -c%s dist/guide-tr.xml.gz)
-
+          BOYUT=$(stat -c%s dist/guide-tr.xml.gz)
+          ZAMAN=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           cat > dist/manifest-tr.json <<EOF
           {
             "country": "tr",
             "language": "tr",
-            "generated": "$GENERATED",
-            "channels": $CHANNELS,
-            "programmes": $PROGRAMMES,
+            "generated": "$ZAMAN",
+            "channels": ${{ steps.say.outputs.kanal }},
+            "channelsWithPrograms": ${{ steps.say.outputs.dolu }},
+            "programmes": ${{ steps.say.outputs.program }},
             "sha256": "$HASH",
-            "bytesGz": $SIZE,
-            "file": "guide-tr.xml.gz"
+            "bytesGz": $BOYUT,
+            "file": "guide-tr.xml.gz",
+            "source": "github-vpn"
           }
           EOF
-
-          # DMD, ulke/dil basina kac rehber oldugunu ve nerede oldugunu
-          # buradan kesfeder. Yeni bir ulke eklendiginde bu dosyaya yeni
-          # bir giris eklenir (elle veya baska bir workflow adimiyla) -
-          # simdilik tek girisli, ama format cogul icin hazir.
           cat > dist/registry.json <<EOF
           {
             "version": 1,
-            "updated": "$GENERATED",
-            "guides": {
-              "tr": {
-                "manifest": "manifest-tr.json",
-                "file": "guide-tr.xml.gz"
-              }
-            }
+            "updated": "$ZAMAN",
+            "guides": { "tr": { "manifest": "manifest-tr.json", "file": "guide-tr.xml.gz" } }
           }
           EOF
-
-          echo "Son guncelleme (UTC): $GENERATED" > dist/last-updated.txt
+          echo "Son guncelleme (UTC): $ZAMAN" > dist/last-updated.txt
+          cat dist/manifest-tr.json
 
       - name: Degisiklikleri commit'le ve gonder
         run: |
@@ -110,8 +243,12 @@ jobs:
           git config user.email "epg-bot@users.noreply.github.com"
           git add dist/guide-tr.xml dist/guide-tr.xml.gz dist/manifest-tr.json dist/registry.json dist/last-updated.txt
           if git diff --cached --quiet; then
-            echo "Degisiklik yok, commit atlanuyor."
+            echo "Degisiklik yok."
           else
-            git commit -m "EPG guncellendi: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git commit -m "EPG (VPN): ${{ steps.say.outputs.dolu }} kanal, $(date -u +'%Y-%m-%d %H:%M UTC')"
             git push
           fi
+
+      - name: VPN baglantisini kes
+        if: always()
+        run: adguardvpn-cli disconnect || true
