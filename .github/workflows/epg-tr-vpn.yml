@@ -70,8 +70,15 @@ jobs:
 
       - name: AdGuard VPN komut satirini kur
         run: |
-          curl -fsSL https://raw.githubusercontent.com/AdguardTeam/AdGuardVPNCLI/HEAD/scripts/release/install.sh | sh -s -- -v
-          adguardvpn-cli --version || true
+          # -a y : kurulum betigi "/usr/local/bin'e kisayol olusturayim mi?"
+          # diye soruyor ve cevabi /dev/tty'den okumaya calisiyor. GitHub
+          # sunucusunda klavye yok, o yuzden ilk denemede patladi
+          # ("cannot open /dev/tty"). -a y o soruyu pesinen cevaplar.
+          curl -fsSL https://raw.githubusercontent.com/AdguardTeam/AdGuardVPNCLI/HEAD/scripts/release/install.sh \
+            | sh -s -- -v -a y
+          export PATH="$PATH:/opt/adguardvpn_cli"
+          echo "/opt/adguardvpn_cli" >> $GITHUB_PATH
+          adguardvpn-cli --version || /opt/adguardvpn_cli/adguardvpn-cli --version || true
 
       # ---------------------------------------------------------------------
       # GIRIS - yalnizca elle baslatildiginda ve kutu isaretliyken.
@@ -90,8 +97,10 @@ jobs:
 
       - name: Giris yapilmis mi
         run: |
-          if ! adguardvpn-cli status 2>&1 | grep -qiv 'not logged'; then
-            echo "::error::AdGuard girisi yok. Bu is akisini elle calistirip"
+          DURUM=$(adguardvpn-cli status 2>&1 || true)
+          echo "$DURUM"
+          if echo "$DURUM" | grep -qi 'not logged\|log in\|oturum'; then
+            echo "::error::AdGuard girisi yok. Bu is akisini ELLE calistirip"
             echo "::error::'giris_yenile' kutusunu isaretle."
             exit 1
           fi
