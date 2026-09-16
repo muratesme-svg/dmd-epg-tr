@@ -59,6 +59,12 @@ jobs:
       # AdGuard oturumu. Onbellekte varsa geri yuklenir; yoksa asagidaki
       # giris adimi devreye girer.
       # ---------------------------------------------------------------------
+      # Onbellek anahtari her calismada FARKLI, geri yukleme ONEKLE yapiliyor.
+      # Neden: GitHub sabit anahtarli bir onbellegi BIR KEZ yazar, sonra
+      # bir daha guncellemez (anahtar isabet edince kaydetme adimi atlanir).
+      # AdGuard oturum dosyasi tazelenince eski hali onbellekte cakili
+      # kalirdi. Bu haliyle her calisma en yenisini alir ve kendi halini
+      # geri yazar - oturum kendini yenileyebilir.
       - name: AdGuard oturumunu onbellekten al
         id: oturum
         uses: actions/cache@v4
@@ -66,7 +72,10 @@ jobs:
           path: |
             ~/.local/share/adguardvpn-cli
             ~/.config/adguardvpn-cli
-          key: adguard-oturum-v1
+            ~/.adguardvpn-cli
+          key: adguard-oturum-${{ github.run_id }}
+          restore-keys: |
+            adguard-oturum-
 
       - name: AdGuard VPN komut satirini kur
         run: |
@@ -95,21 +104,37 @@ jobs:
           echo "=============================================================="
           adguardvpn-cli login
 
-      - name: Giris yapilmis mi
+      # TANI ADIMI - burasi is akisini ASLA dusurmez, sadece anlatir.
+      # Onceki surumde burada bir metin aramasi vardi ve "giris yok" diye
+      # yanlis karar verip turu 8 saniyede oldurebiliyordu. Artik karari
+      # bir sonraki adim (baglanma) veriyor: giris yoksa zaten o adim
+      # kendi net hatasiyla duser. Burasi yalnizca oturumun NEREDE
+      # durdugunu kayda gecirir - bir daha ayni soruyu sormayalim diye.
+      - name: AdGuard durumu (tani - dusurmez)
         run: |
-          DURUM=$(adguardvpn-cli status 2>&1 || true)
-          echo "$DURUM"
-          if echo "$DURUM" | grep -qi 'not logged\|log in\|oturum'; then
-            echo "::error::AdGuard girisi yok. Bu is akisini ELLE calistirip"
-            echo "::error::'giris_yenile' kutusunu isaretle."
-            exit 1
-          fi
+          echo "--- status ---"
+          adguardvpn-cli status 2>&1 || true
+          echo "--- account ---"
+          adguardvpn-cli account 2>&1 || true
+          echo "--- olasi oturum klasorleri ---"
+          for K in ~/.local/share/adguardvpn-cli ~/.config/adguardvpn-cli ~/.adguardvpn-cli; do
+            if [ -d "$K" ]; then echo "VAR : $K"; ls -la "$K" | head -10; else echo "yok : $K"; fi
+          done
+          echo "--- /opt/adguardvpn_cli ---"
+          sudo ls -la /opt/adguardvpn_cli 2>/dev/null | head -15 || true
 
       - name: Istanbul'a baglan
         run: |
-          adguardvpn-cli connect -l Istanbul || adguardvpn-cli connect -l TR
+          if ! adguardvpn-cli connect -l Istanbul 2>&1 && \
+             ! adguardvpn-cli connect -l TR 2>&1; then
+            echo "::error::Istanbul'a baglanilamadi. En olasi sebep: AdGuard"
+            echo "::error::oturumu dusmus. COZUM: bu is akisini ELLE calistir"
+            echo "::error::ve 'giris_yenile' kutusunu ISARETLE - canli logda"
+            echo "::error::cikan bagi tarayicida onayla. Rehber DEGISMEDI."
+            exit 1
+          fi
           sleep 5
-          adguardvpn-cli status
+          adguardvpn-cli status 2>&1 || true
 
       # ---------------------------------------------------------------------
       # KANARYA. Olculmus ayirt edici: Digiturk Turkiye'den 200, disaridan 403.
