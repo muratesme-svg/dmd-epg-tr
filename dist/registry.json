@@ -1,5 +1,10 @@
-{
-  "version": 1,
-  "updated": "2026-09-18T19:29:24Z",
-  "guides": { "tr": { "manifest": "manifest-tr.json", "file": "guide-tr.xml.gz" } }
+﻿{
+    "version":  1,
+    "updated":  "2026-09-19T21:50:21Z",
+    "guides":  {
+                   "tr":  {
+                              "manifest":  "manifest-tr.json",
+                              "file":  "guide-tr.xml.gz"
+                          }
+               }
 }
