@@ -1,12 +1,12 @@
-﻿{
-    "country":  "tr",
-    "language":  "tr",
-    "generated":  "2026-09-24T06:30:24Z",
-    "channels":  584,
-    "channelsWithPrograms":  145,
-    "programmes":  18854,
-    "sha256":  "35380ce0d703f2c5b511ad07430b4d616fa17462dff96ae47f352d8cb80f88e9",
-    "bytesGz":  429573,
-    "file":  "guide-tr.xml.gz",
-    "source":  "yerel"
+{
+  "country": "tr",
+  "language": "tr",
+  "generated": "2026-09-25T00:24:39Z",
+  "channels": 584,
+  "channelsWithPrograms": 222,
+  "programmes": 32780,
+  "sha256": "10615b70245704e7cbdda46f67c8649d22aa95f18f447f7a764a0bc647cb9fec",
+  "bytesGz": 1130194,
+  "file": "guide-tr.xml.gz",
+  "source": "github-vpn"
 }
