@@ -1,12 +1,12 @@
 {
   "country": "tr",
   "language": "tr",
-  "generated": "2026-10-11T11:35:32Z",
+  "generated": "2026-10-13T20:13:16Z",
   "channels": 584,
-  "channelsWithPrograms": 224,
-  "programmes": 37761,
-  "sha256": "6d5ad8cb3354eff86f6f0d88780b05ec017ac0c46daeb48536acb7f521f596af",
-  "bytesGz": 1331269,
+  "channelsWithPrograms": 223,
+  "programmes": 35883,
+  "sha256": "be7bedc8b6ae1e909c48d1cea4c9c5aacd061faf1cb23b53bdc85d67124224a3",
+  "bytesGz": 1282073,
   "file": "guide-tr.xml.gz",
   "source": "github-vpn"
 }
