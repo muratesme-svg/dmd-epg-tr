@@ -65,17 +65,7 @@ jobs:
       # AdGuard oturum dosyasi tazelenince eski hali onbellekte cakili
       # kalirdi. Bu haliyle her calisma en yenisini alir ve kendi halini
       # geri yazar - oturum kendini yenileyebilir.
-      - name: AdGuard oturumunu onbellekten al
-        id: oturum
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.local/share/adguardvpn-cli
-            ~/.config/adguardvpn-cli
-            ~/.adguardvpn-cli
-          key: adguard-oturum-${{ github.run_id }}
-          restore-keys: |
-            adguard-oturum-
+      # (Onbellek adimi asagiya, kurulumun ARDINA tasindi - bkz. #K51 notu.)
 
       - name: AdGuard VPN komut satirini kur
         run: |
@@ -88,6 +78,61 @@ jobs:
           export PATH="$PATH:/opt/adguardvpn_cli"
           echo "/opt/adguardvpn_cli" >> $GITHUB_PATH
           adguardvpn-cli --version || /opt/adguardvpn_cli/adguardvpn-cli --version || true
+
+      # ---------------------------------------------------------------------
+      # #K51 (2026-10-16) SIRA DEGISTI: oturum onbellegi artik KURULUMDAN SONRA
+      # geri yukleniyor. Kanit: 50 calismanin 50'sinde zamanlanmis calisma
+      # "You are not logged in" ile dustu; elle giris yapilan her calisma
+      # basarili. Basarisiz calismada oturum klasoru geri geliyordu
+      # (cache_selector.dat, tunnel.log onceki gunun tarihini tasiyordu) ama
+      # adguardvpn-cli.conf 281 bayt ve o calismanin saatinde yeniden
+      # yazilmisti; giris yapilmis halinde 634 bayt. Yani kurulum/ilk calisma
+      # kayitli oturumun uzerine yazmis olabilir. Kurulum once, geri yukleme
+      # sonra olursa bu ihtimal ortadan kalkar.
+      # ---------------------------------------------------------------------
+      - name: AdGuard oturumunu onbellekten al
+        id: oturum
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/adguardvpn-cli
+            ~/.config/adguardvpn-cli
+            ~/.adguardvpn-cli
+          key: adguard-oturum-${{ github.run_id }}
+          restore-keys: |
+            adguard-oturum-
+
+      - name: Oturum onbellek tanisi (dusurmez, deger YAZMAZ)
+        run: |
+          echo "onbellek tam isabet : ${{ steps.oturum.outputs.cache-hit }}"
+          echo "eslesen anahtar     : ${{ steps.oturum.outputs.cache-matched-key }}"
+          D=~/.local/share/adguardvpn-cli
+          ls -la --time-style=full-iso "$D" 2>&1 | head -20
+          echo "--- conf alanlari (yalniz ad ve uzunluk; degerler yazilmaz) ---"
+          python3 - <<'PY'
+          import json, os
+          p = os.path.expanduser('~/.local/share/adguardvpn-cli/adguardvpn-cli.conf')
+          try:
+              raw = open(p).read()
+          except Exception as e:
+              print('okunamadi:', e)
+              raise SystemExit
+          print('boyut', len(raw))
+          try:
+              d = json.loads(raw)
+              def kz(o, pre=''):
+                  for k, v in o.items():
+                      if isinstance(v, dict):
+                          kz(v, pre + k + '.')
+                      else:
+                          print(' ', pre + k, type(v).__name__, len(str(v)))
+              kz(d)
+          except Exception:
+              for l in raw.splitlines():
+                  print(' ', l.split('=')[0].split(':')[0][:40], '(satir uzunlugu', len(l), ')')
+          PY
+          echo "--- geri yukleme hemen sonrasi durum ---"
+          adguardvpn-cli status 2>&1 || true
 
       # ---------------------------------------------------------------------
       # GIRIS - yalnizca elle baslatildiginda ve kutu isaretliyken.
