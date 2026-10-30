@@ -1,0 +1,6 @@
+{
+  "aciklama": "DMD IPTV PRO deneme surumleri. Her kimlik icin aktif=false yaparsan o deneme aninda kapanir; bitis tarihini derlemedeki tarihten ONCEYE cekebilirsin (sonraya uzatmak icin yeni derleme gerekir).",
+  "deneme": {
+    "arkadas": { "aktif": true, "bitis": "2026-12-31T23:59:00+03:00" }
+  }
+}
