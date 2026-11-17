@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>DMD IPTV PRO</title>
+<!--
+  #K280 DMD Chromecast alicisi (Asama 2). Telefon / tablet "Uygulamasiz yansit" dediginde
+  Chromecast / Google TV bu sayfayi acar. Yayini TV kendisi ceker; bu sayfa:
+   - canli HLS'yi MPEG-TS olarak tanir (Google'in hazir alicisi TS sesini yanlis tahmin edebiliyor),
+   - oynadiktan sonra kopan / donan yayini kendisi yeniden baglar (canli: bastan, film: kaldigi saniyeden),
+   - ekranda DMD logosu ve kanal adini gosterir.
+  Gonderen uygulamaya giden mesajlar Google'in standart medya mesajlaridir; uygulama tarafinda
+  ayri bir protokol yoktur. Yayinlama: alici_yayinla.bat (GitHub Pages + Tailscale /alici).
+-->
+<script src="https://www.gstatic.com/cast/sdk/libs/caf_receiver/v3/cast_receiver_framework.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #101215; overflow: hidden; }
+  cast-media-player {
+    --background-color: #101215;
+    --splash-background: #101215;
+    --splash-image: url("logo.png");
+    --splash-size: 540px 213px;
+    --logo-image: url("logo.png");
+    --logo-background: #101215;
+    --progress-color: #00D8FF;
+    --theme-hue: 190;
+    --font-family: Roboto, "Noto Sans", Arial, sans-serif;
+  }
+  #bilgi {
+    position: fixed; left: 64px; top: 48px; z-index: 10;
+    display: flex; align-items: center; gap: 24px;
+    padding: 18px 28px; border-radius: 18px;
+    background: rgba(16, 18, 21, 0.82);
+    font-family: Roboto, "Noto Sans", Arial, sans-serif; color: #F8FAFC;
+    opacity: 0; transition: opacity 0.6s ease;
+    max-width: 70%;
+  }
+  #bilgi.acik { opacity: 1; }
+  #bilgi img { height: 56px; width: auto; }
+  #bilgi .metin { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  #baslik { font-size: 30px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #durum { font-size: 22px; color: #00D8FF; }
+  #durum.uyari { color: #FF2A5F; }
+  #surum { position: fixed; right: 24px; bottom: 16px; z-index: 10; font: 14px Roboto, Arial, sans-serif; color: rgba(248, 250, 252, 0.25); }
+</style>
+</head>
+<body>
+<cast-media-player></cast-media-player>
+<div id="bilgi"><img src="logo.png" alt=""><div class="metin"><div id="baslik"></div><div id="durum"></div></div></div>
+<div id="surum">DMD alıcı 1</div>
+<script>
+(function () {
+  'use strict';
+  var fw = cast.framework;
+  var msj = fw.messages;
+  var ctx = fw.CastReceiverContext.getInstance();
+  var pm = ctx.getPlayerManager();
+
+  var EN_COK_DENEME = 6;      /* oynadiktan sonra kopan yayin en cok bu kadar yeniden baglanir */
+  var DONMA_SN = 16;          /* sure bu kadar ilerlemezse yayin "dondu" sayilir */
+  var SAGLAM_SN = 60;         /* bu kadar sorunsuz oynayinca deneme sayaci sifirlanir */
+
+  var son = null;             /* son LOAD: { media, customData, canli } */
+  var oynadi = false;         /* gonderenin actigi bu yayin en az bir kez goruntu verdi mi (yeniden baglanmada korunur) */
+  var elleDurdu = false;      /* gonderen STOP dedi: yeniden baglanma yok */
+  var deneme = 0;
+  var sonZaman = -1, donuk = 0, saglam = 0;
+  var bekleyen = null, gizle = null;
+
+  var bilgi = document.getElementById('bilgi');
+  var baslikEl = document.getElementById('baslik');
+  var durumEl = document.getElementById('durum');
+
+  function goster(baslik, durum, uyari, sn) {
+    if (baslik !== null) baslikEl.textContent = baslik || '';
+    durumEl.textContent = durum || '';
+    durumEl.className = uyari ? 'uyari' : '';
+    bilgi.className = 'acik';
+    if (gizle) clearTimeout(gizle);
+    gizle = sn ? setTimeout(function () { bilgi.className = ''; }, sn * 1000) : null;
+  }
+
+  function hlsMi(m) {
+    var u = String(m.contentUrl || m.contentId || '').toLowerCase();
+    var t = String(m.contentType || '').toLowerCase();
+    return u.indexOf('.m3u8') >= 0 || u.indexOf('/dmdkopru/') >= 0 || t.indexOf('mpegurl') >= 0;
+  }
+
+  function baslikOf(m) {
+    return (m && m.metadata && m.metadata.title) ? String(m.metadata.title) : '';
+  }
+
+  /* Gonderenden (ya da bizim yeniden baglanmamizdan) gelen her LOAD buradan gecer. */
+  pm.setMessageInterceptor(msj.MessageType.LOAD, function (req) {
+    var m = req.media;
+    if (!m) return req;
+    if (!m.contentUrl && m.contentId) m.contentUrl = m.contentId;
+    var cd = req.customData || {};
+    if (hlsMi(m) && cd.dmdBicim !== 'fmp4') {
+      /* IPTV HLS'si MPEG-TS parcalidir. Belirtilmezse alici sesi "paketli AAC" sanip acamayabiliyor. */
+      if (!m.hlsSegmentFormat) m.hlsSegmentFormat = msj.HlsSegmentFormat.TS;
+      if (!m.hlsVideoSegmentFormat) m.hlsVideoSegmentFormat = msj.HlsVideoSegmentFormat.MPEG2_TS;
+    }
+    if (!cd.dmdYeniden) { deneme = 0; oynadi = false; } /* yeni yayin: sayac sifir */
+    son = { media: m, customData: cd, canli: m.streamType === msj.StreamType.LIVE };
+    elleDurdu = false;
+    sonZaman = -1; donuk = 0; saglam = 0;
+    if (bekleyen) { clearTimeout(bekleyen); bekleyen = null; }
+    goster(baslikOf(m), cd.dmdYeniden ? ('Yeniden bağlanıyor (' + deneme + '/' + EN_COK_DENEME + ')') : 'Açılıyor…', false, 0);
+    return req;
+  });
+
+  pm.setMessageInterceptor(msj.MessageType.STOP, function (req) {
+    elleDurdu = true;
+    if (bekleyen) { clearTimeout(bekleyen); bekleyen = null; }
+    bilgi.className = '';
+    return req;
+  });
+
+  /* Oynamis bir yayin koptu / dondu: kisa bekleyip ayni adresi yeniden acar. */
+  function toparla(neden) {
+    if (!son || !oynadi || elleDurdu || bekleyen) return;
+    if (deneme >= EN_COK_DENEME) {
+      goster(null, 'Yayın toparlanamadı. Kanalı telefondan yeniden seçin.', true, 0);
+      return;
+    }
+    deneme++;
+    var konum = son.canli ? 0 : Math.max(0, sonZaman);
+    goster(baslikOf(son.media), 'Bağlantı toparlanıyor (' + deneme + '/' + EN_COK_DENEME + ')', false, 0);
+    bekleyen = setTimeout(function () {
+      bekleyen = null;
+      if (elleDurdu || !son) return;
+      sonZaman = -1; donuk = 0; saglam = 0;
+      var r = new msj.LoadRequestData();
+      r.media = son.media;
+      r.autoplay = true;
+      if (konum > 0) r.currentTime = konum;
+      var cd = {};
+      for (var k in son.customData) cd[k] = son.customData[k];
+      cd.dmdYeniden = deneme;
+      cd.dmdNeden = neden;
+      r.customData = cd;
+      pm.load(r).catch(function () { /* hata olayi ayrica gelir */ });
+    }, Math.min(1500 * deneme, 6000));
+  }
+
+  pm.addEventListener(fw.events.EventType.PLAYING, function () {
+    oynadi = true;
+    goster(null, son && son.canli ? 'Canlı' : '', false, 4);
+  });
+
+  pm.addEventListener(fw.events.EventType.ERROR, function () {
+    toparla('hata');
+  });
+
+  pm.addEventListener(fw.events.EventType.MEDIA_FINISHED, function (e) {
+    var r = e && e.endedReason;
+    /* Canli yayin "bitti" diyorsa kopmustur; film sonuna geldiyse dokunulmaz. */
+    if (r === 'ERROR' || (son && son.canli && r === 'END_OF_STREAM')) toparla(r === 'ERROR' ? 'hata' : 'bitti');
+  });
+
+  /* Donma bekcisi: oynuyor gorunup suresi ilerlemeyen yayin. */
+  setInterval(function () {
+    if (!son || !oynadi || elleDurdu || bekleyen) return;
+    var d = pm.getPlayerState();
+    if (d !== msj.PlayerState.PLAYING && d !== msj.PlayerState.BUFFERING) { donuk = 0; return; }
+    var t = pm.getCurrentTimeSec();
+    if (typeof t !== 'number' || isNaN(t)) return;
+    if (Math.abs(t - sonZaman) < 0.05) {
+      donuk += 2;
+      if (donuk >= DONMA_SN) { donuk = 0; toparla('donma'); }
+    } else {
+      donuk = 0;
+      saglam += 2;
+      if (saglam >= SAGLAM_SN) { deneme = 0; saglam = 0; }
+    }
+    sonZaman = t;
+  }, 2000);
+
+  var pc = new fw.PlaybackConfig();
+  pc.autoResumeDuration = 3;
+  pc.segmentRequestRetryLimit = 6;
+  pc.initialBandwidth = 4000000;
+
+  var secenek = new fw.CastReceiverOptions();
+  secenek.playbackConfig = pc;
+  secenek.statusText = 'DMD IPTV PRO';
+  secenek.supportedCommands = msj.Command.ALL_BASIC_MEDIA;
+  ctx.start(secenek);
+})();
+</script>
+</body>
+</html>
