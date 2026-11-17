@@ -1,12 +1,12 @@
 {
     "country":  "tr",
     "language":  "tr",
-    "generated":  "2026-11-16T21:29:36Z",
+    "generated":  "2026-11-17T07:01:35Z",
     "channels":  479,
     "channelsWithPrograms":  267,
-    "programmes":  33527,
-    "sha256":  "795aab8ece9f975ce280e69830047e26359e8614b7033a28fc68790e1f103e4c",
-    "bytesGz":  1082237,
+    "programmes":  31373,
+    "sha256":  "ab1500745cf27c199f540844bca3e392a6eb15113a8150163b064acd7a7599b9",
+    "bytesGz":  1033355,
     "file":  "guide-tr.xml.gz",
     "source":  "yerel"
 }
