@@ -1,0 +1,882 @@
+{
+ "surum": 1,
+ "uretim": "2026-11-27T19:11:33.962777Z",
+ "kategoriler": {
+  "tr/ haber kanallari": {
+   "dosya": "tr-haber-kanallari-hp51sm.xml.gz",
+   "kanal": 22,
+   "program": 1487,
+   "bayt": 14729
+  },
+  "wd/ world live /news": {
+   "dosya": "wd-world-live-news-sh2y4a.xml.gz",
+   "kanal": 60,
+   "program": 4500,
+   "bayt": 46950
+  },
+  "surinam legal tv": {
+   "dosya": "surinam-legal-tv-5bevzc.xml.gz",
+   "kanal": 100,
+   "program": 6537,
+   "bayt": 82974
+  },
+  "tr/ belgesel kanallari": {
+   "dosya": "tr-belgesel-kanallari-8eatw1.xml.gz",
+   "kanal": 23,
+   "program": 1841,
+   "bayt": 26633
+  },
+  "tr/ turkiye karasal": {
+   "dosya": "tr-turkiye-karasal-q3ehb9.xml.gz",
+   "kanal": 15,
+   "program": 1104,
+   "bayt": 13150
+  },
+  "wc/ world channel": {
+   "dosya": "wc-world-channel-2cq4zc.xml.gz",
+   "kanal": 529,
+   "program": 37826,
+   "bayt": 485922
+  },
+  "tr/ bein spor [vip]": {
+   "dosya": "tr-bein-spor-vip-gu496s.xml.gz",
+   "kanal": 15,
+   "program": 852,
+   "bayt": 6900
+  },
+  "tr/ bein spor [yedek]": {
+   "dosya": "tr-bein-spor-yedek-lt6dkz.xml.gz",
+   "kanal": 9,
+   "program": 456,
+   "bayt": 4754
+  },
+  "tr/ cocuk kanallari": {
+   "dosya": "tr-cocuk-kanallari-dbd6nh.xml.gz",
+   "kanal": 12,
+   "program": 3142,
+   "bayt": 28741
+  },
+  "tr/ dini kanallar": {
+   "dosya": "tr-dini-kanallar-nk8cgt.xml.gz",
+   "kanal": 7,
+   "program": 525,
+   "bayt": 6478
+  },
+  "ae/ united arab emirates": {
+   "dosya": "ae-united-arab-emirates-g4auw.xml.gz",
+   "kanal": 155,
+   "program": 9491,
+   "bayt": 88146
+  },
+  "rusya legal tv": {
+   "dosya": "rusya-legal-tv-vizk7l.xml.gz",
+   "kanal": 23,
+   "program": 3117,
+   "bayt": 31359
+  },
+  "uganda legal tv": {
+   "dosya": "uganda-legal-tv-5em231.xml.gz",
+   "kanal": 1,
+   "program": 77,
+   "bayt": 1374
+  },
+  "trinidad tobago legal tv": {
+   "dosya": "trinidad-tobago-legal-tv-kzyy5k.xml.gz",
+   "kanal": 110,
+   "program": 10034,
+   "bayt": 132718
+  },
+  "endonezya legal tv": {
+   "dosya": "endonezya-legal-tv-u2egpe.xml.gz",
+   "kanal": 4,
+   "program": 300,
+   "bayt": 4990
+  },
+  "wd/ world live /kids": {
+   "dosya": "wd-world-live-kids-sh13o4.xml.gz",
+   "kanal": 37,
+   "program": 6294,
+   "bayt": 71351
+  },
+  "in/ india": {
+   "dosya": "in-india-qeia01.xml.gz",
+   "kanal": 104,
+   "program": 7603,
+   "bayt": 77113
+  },
+  "arjantin legal tv": {
+   "dosya": "arjantin-legal-tv-iihhee.xml.gz",
+   "kanal": 4,
+   "program": 222,
+   "bayt": 3025
+  },
+  "hindistan legal tv": {
+   "dosya": "hindistan-legal-tv-zie0eh.xml.gz",
+   "kanal": 316,
+   "program": 23056,
+   "bayt": 230170
+  },
+  "honduras legal tv": {
+   "dosya": "honduras-legal-tv-w8dq0t.xml.gz",
+   "kanal": 3,
+   "program": 176,
+   "bayt": 2562
+  },
+  "wd/ world live /movies": {
+   "dosya": "wd-world-live-movies-grr7ca.xml.gz",
+   "kanal": 60,
+   "program": 1909,
+   "bayt": 39786
+  },
+  "eu/ live sports legal": {
+   "dosya": "eu-live-sports-legal-ao7nyj.xml.gz",
+   "kanal": 53,
+   "program": 2371,
+   "bayt": 42533
+  },
+  "brezilya legal tv": {
+   "dosya": "brezilya-legal-tv-qz1qxl.xml.gz",
+   "kanal": 27,
+   "program": 2150,
+   "bayt": 29109
+  },
+  "danimarka legal tv": {
+   "dosya": "danimarka-legal-tv-jcpmgd.xml.gz",
+   "kanal": 49,
+   "program": 3735,
+   "bayt": 45071
+  },
+  "isvec legal tv": {
+   "dosya": "isvec-legal-tv-fxein.xml.gz",
+   "kanal": 54,
+   "program": 3901,
+   "bayt": 48553
+  },
+  "meksika legal tv": {
+   "dosya": "meksika-legal-tv-1yz6kq.xml.gz",
+   "kanal": 42,
+   "program": 3351,
+   "bayt": 41590
+  },
+  "norvec legal tv": {
+   "dosya": "norvec-legal-tv-himkzq.xml.gz",
+   "kanal": 43,
+   "program": 3040,
+   "bayt": 33784
+  },
+  "eu/ web tv channel": {
+   "dosya": "eu-web-tv-channel-o5sqk2.xml.gz",
+   "kanal": 265,
+   "program": 16650,
+   "bayt": 213989
+  },
+  "tr/ ulusal tv [hd] [vip]": {
+   "dosya": "tr-ulusal-tv-hd-vip-nrcrf2.xml.gz",
+   "kanal": 17,
+   "program": 562,
+   "bayt": 8059
+  },
+  "tr/ ulusal tv [fhd] [vip]": {
+   "dosya": "tr-ulusal-tv-fhd-vip-okrrtw.xml.gz",
+   "kanal": 8,
+   "program": 192,
+   "bayt": 2950
+  },
+  "tr/ hevc plus [4k]": {
+   "dosya": "tr-hevc-plus-4k-css2h6.xml.gz",
+   "kanal": 26,
+   "program": 1110,
+   "bayt": 14027
+  },
+  "turkiye legal tv": {
+   "dosya": "turkiye-legal-tv-z2w8lq.xml.gz",
+   "kanal": 42,
+   "program": 2456,
+   "bayt": 27931
+  },
+  "saint lucia legal tv": {
+   "dosya": "saint-lucia-legal-tv-49x3ti.xml.gz",
+   "kanal": 105,
+   "program": 6731,
+   "bayt": 90784
+  },
+  "tr/ yerel spor [vip]": {
+   "dosya": "tr-yerel-spor-vip-z2vrfh.xml.gz",
+   "kanal": 7,
+   "program": 665,
+   "bayt": 7434
+  },
+  "tr/ tabii spor [vip]": {
+   "dosya": "tr-tabii-spor-vip-ehzeb9.xml.gz",
+   "kanal": 1,
+   "program": 20,
+   "bayt": 641
+  },
+  "tr/ tabii spor [yedek]": {
+   "dosya": "tr-tabii-spor-yedek-dcjw6s.xml.gz",
+   "kanal": 1,
+   "program": 20,
+   "bayt": 642
+  },
+  "wd/ world live /sports": {
+   "dosya": "wd-world-live-sports-jmggfa.xml.gz",
+   "kanal": 7,
+   "program": 386,
+   "bayt": 5827
+  },
+  "tr/ s-sport [vip]": {
+   "dosya": "tr-s-sport-vip-q1ako6.xml.gz",
+   "kanal": 1,
+   "program": 38,
+   "bayt": 682
+  },
+  "wd/ world live /documentary": {
+   "dosya": "wd-world-live-documentary-2j1icm.xml.gz",
+   "kanal": 26,
+   "program": 1740,
+   "bayt": 24931
+  },
+  "bg/ bulgaria": {
+   "dosya": "bg-bulgaria-22piwd.xml.gz",
+   "kanal": 46,
+   "program": 2952,
+   "bayt": 63206
+  },
+  "tr/ borsa kanallari": {
+   "dosya": "tr-borsa-kanallari-uxmyur.xml.gz",
+   "kanal": 2,
+   "program": 200,
+   "bayt": 2361
+  },
+  "bg/ bulgaria vip": {
+   "dosya": "bg-bulgaria-vip-h9blmy.xml.gz",
+   "kanal": 42,
+   "program": 2687,
+   "bayt": 58806
+  },
+  "uk/ united kingdom": {
+   "dosya": "uk-united-kingdom-xmz8b9.xml.gz",
+   "kanal": 155,
+   "program": 11105,
+   "bayt": 161830
+  },
+  "tr/ tivibu spor [vip]": {
+   "dosya": "tr-tivibu-spor-vip-xehmfl.xml.gz",
+   "kanal": 5,
+   "program": 116,
+   "bayt": 1929
+  },
+  "umman legal tv": {
+   "dosya": "umman-legal-tv-snek2v.xml.gz",
+   "kanal": 104,
+   "program": 7425,
+   "bayt": 96147
+  },
+  "isvicre legal tv": {
+   "dosya": "isvicre-legal-tv-ypldc.xml.gz",
+   "kanal": 6,
+   "program": 367,
+   "bayt": 5087
+  },
+  "italya legal tv": {
+   "dosya": "italya-legal-tv-ymxbmz.xml.gz",
+   "kanal": 49,
+   "program": 3877,
+   "bayt": 51419
+  },
+  "it/ italia live": {
+   "dosya": "it-italia-live-7xsc82.xml.gz",
+   "kanal": 13,
+   "program": 1267,
+   "bayt": 19546
+  },
+  "bosna hersek legal tv": {
+   "dosya": "bosna-hersek-legal-tv-o4qd26.xml.gz",
+   "kanal": 2,
+   "program": 65,
+   "bayt": 914
+  },
+  "venezuela legal tv": {
+   "dosya": "venezuela-legal-tv-hdc5dc.xml.gz",
+   "kanal": 5,
+   "program": 412,
+   "bayt": 4966
+  },
+  "avustralya legal tv": {
+   "dosya": "avustralya-legal-tv-i669c5.xml.gz",
+   "kanal": 33,
+   "program": 2162,
+   "bayt": 29240
+  },
+  "tayland legal tv": {
+   "dosya": "tayland-legal-tv-yqlp0y.xml.gz",
+   "kanal": 17,
+   "program": 1314,
+   "bayt": 26891
+  },
+  "karadag legal tv": {
+   "dosya": "karadag-legal-tv-1v01r8.xml.gz",
+   "kanal": 1,
+   "program": 13,
+   "bayt": 259
+  },
+  "bih bosnia hercegovina": {
+   "dosya": "bih-bosnia-hercegovina-ke24is.xml.gz",
+   "kanal": 8,
+   "program": 551,
+   "bayt": 8660
+  },
+  "de/ sky sport": {
+   "dosya": "de-sky-sport-uchjmr.xml.gz",
+   "kanal": 28,
+   "program": 651,
+   "bayt": 7972
+  },
+  "fr/ france": {
+   "dosya": "fr-france-wiqeig.xml.gz",
+   "kanal": 9,
+   "program": 1065,
+   "bayt": 11701
+  },
+  "fransa legal tv": {
+   "dosya": "fransa-legal-tv-h2vkgy.xml.gz",
+   "kanal": 76,
+   "program": 8536,
+   "bayt": 81134
+  },
+  "slovakya legal tv": {
+   "dosya": "slovakya-legal-tv-vqn11z.xml.gz",
+   "kanal": 30,
+   "program": 3352,
+   "bayt": 47046
+  },
+  "monako legal tv": {
+   "dosya": "monako-legal-tv-xz7sfk.xml.gz",
+   "kanal": 1,
+   "program": 80,
+   "bayt": 1841
+  },
+  "fr/ france vip": {
+   "dosya": "fr-france-vip-uc2r4l.xml.gz",
+   "kanal": 58,
+   "program": 4743,
+   "bayt": 76466
+  },
+  "de/ sky entertainment": {
+   "dosya": "de-sky-entertainment-bes6nr.xml.gz",
+   "kanal": 17,
+   "program": 870,
+   "bayt": 15360
+  },
+  "eu world cup nations": {
+   "dosya": "eu-world-cup-nations-e3ni6k.xml.gz",
+   "kanal": 22,
+   "program": 2000,
+   "bayt": 35219
+  },
+  "diğer": {
+   "dosya": "diger-13f1af.xml.gz",
+   "kanal": 19,
+   "program": 1584,
+   "bayt": 31083
+  },
+  "de/ musik": {
+   "dosya": "de-musik-n2g5rv.xml.gz",
+   "kanal": 7,
+   "program": 285,
+   "bayt": 5850
+  },
+  "almanya legal tv": {
+   "dosya": "almanya-legal-tv-e32l82.xml.gz",
+   "kanal": 83,
+   "program": 6140,
+   "bayt": 97957
+  },
+  "polonya legal tv": {
+   "dosya": "polonya-legal-tv-97fxo5.xml.gz",
+   "kanal": 61,
+   "program": 4407,
+   "bayt": 69922
+  },
+  "amerika legal tv": {
+   "dosya": "amerika-legal-tv-2m1krn.xml.gz",
+   "kanal": 418,
+   "program": 28702,
+   "bayt": 354406
+  },
+  "guney kore legal tv": {
+   "dosya": "guney-kore-legal-tv-49dcw6.xml.gz",
+   "kanal": 2,
+   "program": 204,
+   "bayt": 2299
+  },
+  "kanada legal tv": {
+   "dosya": "kanada-legal-tv-z21j0j.xml.gz",
+   "kanal": 85,
+   "program": 5499,
+   "bayt": 64633
+  },
+  "vietnam legal tv": {
+   "dosya": "vietnam-legal-tv-k8q1dd.xml.gz",
+   "kanal": 5,
+   "program": 160,
+   "bayt": 5542
+  },
+  "sili legal tv": {
+   "dosya": "sili-legal-tv-d0yom.xml.gz",
+   "kanal": 1,
+   "program": 31,
+   "bayt": 560
+  },
+  "de/ kinder": {
+   "dosya": "de-kinder-3o0clv.xml.gz",
+   "kanal": 14,
+   "program": 2067,
+   "bayt": 24698
+  },
+  "be/ belgium": {
+   "dosya": "be-belgium-3ko07j.xml.gz",
+   "kanal": 2,
+   "program": 182,
+   "bayt": 3200
+  },
+  "belcika legal tv": {
+   "dosya": "belcika-legal-tv-m2981w.xml.gz",
+   "kanal": 5,
+   "program": 591,
+   "bayt": 8111
+  },
+  "de/ regional": {
+   "dosya": "de-regional-5nfv3l.xml.gz",
+   "kanal": 18,
+   "program": 1344,
+   "bayt": 28564
+  },
+  "ermenistan legal tv": {
+   "dosya": "ermenistan-legal-tv-w3pqwr.xml.gz",
+   "kanal": 1,
+   "program": 80,
+   "bayt": 1667
+  },
+  "bolivya legal tv": {
+   "dosya": "bolivya-legal-tv-vjkhkl.xml.gz",
+   "kanal": 3,
+   "program": 278,
+   "bayt": 3247
+  },
+  "ozbekistan legal tv": {
+   "dosya": "ozbekistan-legal-tv-7s58a7.xml.gz",
+   "kanal": 2,
+   "program": 224,
+   "bayt": 3429
+  },
+  "portekiz legal tv": {
+   "dosya": "portekiz-legal-tv-ey5h69.xml.gz",
+   "kanal": 14,
+   "program": 850,
+   "bayt": 17611
+  },
+  "birlesik arap emirlikleri legal tv": {
+   "dosya": "birlesik-arap-emirlikleri-legal-tv-jkj431.xml.gz",
+   "kanal": 17,
+   "program": 1200,
+   "bayt": 12195
+  },
+  "yeni zelanda legal tv": {
+   "dosya": "yeni-zelanda-legal-tv-k8fvzr.xml.gz",
+   "kanal": 29,
+   "program": 1923,
+   "bayt": 28825
+  },
+  "iran legal tv": {
+   "dosya": "iran-legal-tv-nlfgoj.xml.gz",
+   "kanal": 7,
+   "program": 363,
+   "bayt": 6096
+  },
+  "suudi arabistan legal tv": {
+   "dosya": "suudi-arabistan-legal-tv-throcs.xml.gz",
+   "kanal": 11,
+   "program": 915,
+   "bayt": 12014
+  },
+  "misir legal tv": {
+   "dosya": "misir-legal-tv-j2lasp.xml.gz",
+   "kanal": 7,
+   "program": 455,
+   "bayt": 5779
+  },
+  "sudan legal tv": {
+   "dosya": "sudan-legal-tv-musyoq.xml.gz",
+   "kanal": 1,
+   "program": 41,
+   "bayt": 628
+  },
+  "fas legal tv": {
+   "dosya": "fas-legal-tv-gb65qp.xml.gz",
+   "kanal": 1,
+   "program": 100,
+   "bayt": 1130
+  },
+  "irak legal tv": {
+   "dosya": "irak-legal-tv-xcfd1y.xml.gz",
+   "kanal": 7,
+   "program": 419,
+   "bayt": 3611
+  },
+  "bahreyn legal tv": {
+   "dosya": "bahreyn-legal-tv-jws9tk.xml.gz",
+   "kanal": 2,
+   "program": 196,
+   "bayt": 1948
+  },
+  "katar legal tv": {
+   "dosya": "katar-legal-tv-udbwu2.xml.gz",
+   "kanal": 7,
+   "program": 483,
+   "bayt": 4672
+  },
+  "lubnan legal tv": {
+   "dosya": "lubnan-legal-tv-pnjxvr.xml.gz",
+   "kanal": 6,
+   "program": 341,
+   "bayt": 4168
+  },
+  "urdun legal tv": {
+   "dosya": "urdun-legal-tv-u35j6x.xml.gz",
+   "kanal": 3,
+   "program": 104,
+   "bayt": 1365
+  },
+  "kr/ kurdish": {
+   "dosya": "kr-kurdish-b79sui.xml.gz",
+   "kanal": 7,
+   "program": 382,
+   "bayt": 2535
+  },
+  "filistin legal tv": {
+   "dosya": "filistin-legal-tv-n28kg3.xml.gz",
+   "kanal": 3,
+   "program": 213,
+   "bayt": 2631
+  },
+  "libya legal tv": {
+   "dosya": "libya-legal-tv-wlkr98.xml.gz",
+   "kanal": 1,
+   "program": 71,
+   "bayt": 910
+  },
+  "suriye legal tv": {
+   "dosya": "suriye-legal-tv-vn341w.xml.gz",
+   "kanal": 3,
+   "program": 163,
+   "bayt": 1814
+  },
+  "yemen legal tv": {
+   "dosya": "yemen-legal-tv-lp4of3.xml.gz",
+   "kanal": 1,
+   "program": 24,
+   "bayt": 417
+  },
+  "usa/ united states": {
+   "dosya": "usa-united-states-mg7uej.xml.gz",
+   "kanal": 3,
+   "program": 225,
+   "bayt": 3222
+  },
+  "es | spain": {
+   "dosya": "es-spain-i0y5cj.xml.gz",
+   "kanal": 5,
+   "program": 206,
+   "bayt": 3944
+  },
+  "ispanya legal tv": {
+   "dosya": "ispanya-legal-tv-oy7826.xml.gz",
+   "kanal": 49,
+   "program": 2937,
+   "bayt": 40885
+  },
+  "belarus legal tv": {
+   "dosya": "belarus-legal-tv-exqjgx.xml.gz",
+   "kanal": 3,
+   "program": 601,
+   "bayt": 5694
+  },
+  "finlandiya legal tv": {
+   "dosya": "finlandiya-legal-tv-u3l4vi.xml.gz",
+   "kanal": 23,
+   "program": 1473,
+   "bayt": 25771
+  },
+  "japonya legal tv": {
+   "dosya": "japonya-legal-tv-wiyvop.xml.gz",
+   "kanal": 2,
+   "program": 286,
+   "bayt": 2586
+  },
+  "ukrayna legal tv": {
+   "dosya": "ukrayna-legal-tv-mbi7sy.xml.gz",
+   "kanal": 7,
+   "program": 561,
+   "bayt": 10239
+  },
+  "guyana legal tv": {
+   "dosya": "guyana-legal-tv-lb82rk.xml.gz",
+   "kanal": 7,
+   "program": 481,
+   "bayt": 7018
+  },
+  "kambocya legal tv": {
+   "dosya": "kambocya-legal-tv-dfcm1u.xml.gz",
+   "kanal": 1,
+   "program": 102,
+   "bayt": 2798
+  },
+  "estonya legal tv": {
+   "dosya": "estonya-legal-tv-sdktr0.xml.gz",
+   "kanal": 5,
+   "program": 182,
+   "bayt": 3366
+  },
+  "cekya legal tv": {
+   "dosya": "cekya-legal-tv-4eqbp4.xml.gz",
+   "kanal": 13,
+   "program": 940,
+   "bayt": 15492
+  },
+  "yunanistan legal tv": {
+   "dosya": "yunanistan-legal-tv-82qpv5.xml.gz",
+   "kanal": 12,
+   "program": 509,
+   "bayt": 8936
+  },
+  "singapur legal tv": {
+   "dosya": "singapur-legal-tv-ira4su.xml.gz",
+   "kanal": 2,
+   "program": 146,
+   "bayt": 1993
+  },
+  "hollanda legal tv": {
+   "dosya": "hollanda-legal-tv-8ujf94.xml.gz",
+   "kanal": 25,
+   "program": 2920,
+   "bayt": 35555
+  },
+  "nl/ netherlands live": {
+   "dosya": "nl-netherlands-live-a6vl4b.xml.gz",
+   "kanal": 5,
+   "program": 616,
+   "bayt": 7729
+  },
+  "romanya legal tv": {
+   "dosya": "romanya-legal-tv-gdk0p0.xml.gz",
+   "kanal": 27,
+   "program": 1270,
+   "bayt": 23807
+  },
+  "de/ deutschland": {
+   "dosya": "de-deutschland-mml7zl.xml.gz",
+   "kanal": 26,
+   "program": 1654,
+   "bayt": 33793
+  },
+  "moldova legal tv": {
+   "dosya": "moldova-legal-tv-1mhull.xml.gz",
+   "kanal": 4,
+   "program": 298,
+   "bayt": 3875
+  },
+  "makedonya legal tv": {
+   "dosya": "makedonya-legal-tv-ijncvg.xml.gz",
+   "kanal": 2,
+   "program": 108,
+   "bayt": 2007
+  },
+  "bulgaristan legal tv": {
+   "dosya": "bulgaristan-legal-tv-st29ch.xml.gz",
+   "kanal": 1,
+   "program": 9,
+   "bayt": 372
+  },
+  "cn | china": {
+   "dosya": "cn-china-vocfku.xml.gz",
+   "kanal": 4,
+   "program": 300,
+   "bayt": 4378
+  },
+  "cin legal tv": {
+   "dosya": "cin-legal-tv-1i2uox.xml.gz",
+   "kanal": 4,
+   "program": 300,
+   "bayt": 5469
+  },
+  "avusturya legal tv": {
+   "dosya": "avusturya-legal-tv-fcsmkj.xml.gz",
+   "kanal": 8,
+   "program": 678,
+   "bayt": 12568
+  },
+  "az azerbaycan": {
+   "dosya": "az-azerbaycan-u6y28z.xml.gz",
+   "kanal": 1,
+   "program": 103,
+   "bayt": 918
+  },
+  "bahamalar legal tv": {
+   "dosya": "bahamalar-legal-tv-q430zc.xml.gz",
+   "kanal": 1,
+   "program": 103,
+   "bayt": 972
+  },
+  "hirvatistan legal tv": {
+   "dosya": "hirvatistan-legal-tv-gai0ju.xml.gz",
+   "kanal": 6,
+   "program": 378,
+   "bayt": 4968
+  },
+  "gana legal tv": {
+   "dosya": "gana-legal-tv-82p3j0.xml.gz",
+   "kanal": 1,
+   "program": 65,
+   "bayt": 994
+  },
+  "fildisi sahili legal tv": {
+   "dosya": "fildisi-sahili-legal-tv-gb34v5.xml.gz",
+   "kanal": 2,
+   "program": 57,
+   "bayt": 798
+  },
+  "litvanya legal tv": {
+   "dosya": "litvanya-legal-tv-vgs4ph.xml.gz",
+   "kanal": 3,
+   "program": 171,
+   "bayt": 2559
+  },
+  "pakistan legal tv": {
+   "dosya": "pakistan-legal-tv-u0oqj0.xml.gz",
+   "kanal": 1,
+   "program": 170,
+   "bayt": 1972
+  },
+  "macaristan legal tv": {
+   "dosya": "macaristan-legal-tv-3udbsi.xml.gz",
+   "kanal": 5,
+   "program": 440,
+   "bayt": 9317
+  },
+  "sirbistan legal tv": {
+   "dosya": "sirbistan-legal-tv-j3e28o.xml.gz",
+   "kanal": 8,
+   "program": 509,
+   "bayt": 7372
+  },
+  "luksemburg legal tv": {
+   "dosya": "luksemburg-legal-tv-p5f0aw.xml.gz",
+   "kanal": 5,
+   "program": 268,
+   "bayt": 4285
+  },
+  "de/ dazn sport": {
+   "dosya": "de-dazn-sport-eyuvsn.xml.gz",
+   "kanal": 4,
+   "program": 128,
+   "bayt": 2279
+  },
+  "nijerya legal tv": {
+   "dosya": "nijerya-legal-tv-lbdl45.xml.gz",
+   "kanal": 1,
+   "program": 105,
+   "bayt": 1050
+  },
+  "el salvador legal tv": {
+   "dosya": "el-salvador-legal-tv-whgg36.xml.gz",
+   "kanal": 1,
+   "program": 44,
+   "bayt": 796
+  },
+  "kosta rika legal tv": {
+   "dosya": "kosta-rika-legal-tv-ynowuw.xml.gz",
+   "kanal": 1,
+   "program": 44,
+   "bayt": 1142
+  },
+  "paraguay legal tv": {
+   "dosya": "paraguay-legal-tv-bx6shv.xml.gz",
+   "kanal": 3,
+   "program": 117,
+   "bayt": 2591
+  },
+  "ruanda legal tv": {
+   "dosya": "ruanda-legal-tv-qnbrb0.xml.gz",
+   "kanal": 1,
+   "program": 53,
+   "bayt": 1150
+  },
+  "afganistan legal tv": {
+   "dosya": "afganistan-legal-tv-7r3g5d.xml.gz",
+   "kanal": 1,
+   "program": 35,
+   "bayt": 974
+  },
+  "eritre legal tv": {
+   "dosya": "eritre-legal-tv-iddjxa.xml.gz",
+   "kanal": 1,
+   "program": 79,
+   "bayt": 1305
+  },
+  "haiti legal tv": {
+   "dosya": "haiti-legal-tv-tayvk4.xml.gz",
+   "kanal": 1,
+   "program": 79,
+   "bayt": 1305
+  },
+  "guney afrika legal tv": {
+   "dosya": "guney-afrika-legal-tv-fpr3m3.xml.gz",
+   "kanal": 6,
+   "program": 284,
+   "bayt": 5316
+  },
+  "filipinler legal tv": {
+   "dosya": "filipinler-legal-tv-1se91.xml.gz",
+   "kanal": 3,
+   "program": 71,
+   "bayt": 1504
+  },
+  "kolombiya legal tv": {
+   "dosya": "kolombiya-legal-tv-engac4.xml.gz",
+   "kanal": 1,
+   "program": 89,
+   "bayt": 1815
+  },
+  "irlanda legal tv": {
+   "dosya": "irlanda-legal-tv-i9n5do.xml.gz",
+   "kanal": 1,
+   "program": 106,
+   "bayt": 2081
+  },
+  "malta legal tv": {
+   "dosya": "malta-legal-tv-jwjatg.xml.gz",
+   "kanal": 1,
+   "program": 91,
+   "bayt": 1306
+  },
+  "letonya legal tv": {
+   "dosya": "letonya-legal-tv-aw6jvr.xml.gz",
+   "kanal": 3,
+   "program": 133,
+   "bayt": 1673
+  },
+  "mogolistan legal tv": {
+   "dosya": "mogolistan-legal-tv-kwcdw4.xml.gz",
+   "kanal": 25,
+   "program": 707,
+   "bayt": 11884
+  },
+  "peru legal tv": {
+   "dosya": "peru-legal-tv-25va1d.xml.gz",
+   "kanal": 2,
+   "program": 127,
+   "bayt": 2584
+  }
+ }
+}
